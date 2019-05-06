@@ -127,10 +127,13 @@ let make =
             : empty;
 
         let scroll = (wheelEvent: NodeEvents.mouseWheelEventParams) => {
+          /* If the scroll bar isn't visible, we shouldn't be moving. */
           let newScrollTop =
-            actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.);
+            isVerticalScrollbarVisible
+              ? actualScrollTop - int_of_float(wheelEvent.deltaY *. 25.)
+              : actualScrollTop;
 
-          let isAtTop = newScrollTop < 0;
+          let isAtTop = newScrollTop <= 0;
           let isAtBottom = newScrollTop > maxHeight;
 
           switch (bouncingState) {
